@@ -680,7 +680,7 @@ public function saveuser(Request $request){
 
         $document1 = $request->file('photo');
         $filename1 = $document1->getClientOriginalName();
-        $ext = array_pop(explode(".", $filename1));
+        $ext = strtolower($document1->getClientOriginalExtension());
         $whitelist = array('jpeg','jpg','png');
 
         if (in_array($ext, $whitelist)) {
