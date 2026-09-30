@@ -65,7 +65,7 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
 
 														 <div class="form-group col-md-6">
                          <h5 class=" "> Address </h5>
-                         <input class="form-control  " value="{{ $user->address }}" type="text" name="address"
+                         <input class="form-control  " value="" type="text" name="address"
                             placeholder="Enter Address" required>
                      </div>
 
