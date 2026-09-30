@@ -237,7 +237,7 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header ">
-                    <h4 class="modal-title text-{{ $text }}">Add ROI to selected users{{ $user->l_name }}
+                    <h4 class="modal-title text-{{ $text }}">Add ROI to selected users
                     </h4>
                     <button type="button" class="close text-{{ $text }}"
                         data-dismiss="modal">&times;</button>
