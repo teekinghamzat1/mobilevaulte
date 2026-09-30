@@ -857,3 +857,189 @@
         </div>
     </div>
 </div>
+
+<!-- Security Question Modal -->
+<div id="securityQuestionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title font-weight-bold text-primary">
+                    <i class="fas fa-shield-alt mr-2"></i>Security Question Configuration
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-muted small mb-3">
+                    When enabled, <strong>{{ $user->name }}</strong> must correctly answer this security question immediately following PIN verification during login.
+                </p>
+
+                <form method="POST" action="{{ route('admin.users.security.update', $user->id) }}">
+                    @csrf
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold">Security Question Status</label>
+                        <div class="d-flex align-items-center">
+                            <div class="custom-control custom-radio mr-4">
+                                <input type="radio" id="modal_sec_disable" name="security_question_enabled" value="0" class="custom-control-input" {{ !$user->security_question_enabled ? 'checked' : '' }} onchange="toggleModalSecFields(false)">
+                                <label class="custom-control-label font-weight-normal" for="modal_sec_disable">Disabled (PIN only)</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="modal_sec_enable" name="security_question_enabled" value="1" class="custom-control-input" {{ $user->security_question_enabled ? 'checked' : '' }} onchange="toggleModalSecFields(true)">
+                                <label class="custom-control-label font-weight-bold text-primary" for="modal_sec_enable">Enabled (Require Security Question)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="modalSecurityFields" style="{{ !$user->security_question_enabled ? 'opacity: 0.7;' : '' }}">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Select Standard Question</label>
+                            <select class="form-control" onchange="if(this.value) document.getElementById('modal_security_question_input').value = this.value;">
+                                <option value="">-- Choose a standard question or type custom below --</option>
+                                <option value="What is the name of your first elementary school?">What is the name of your first elementary school?</option>
+                                <option value="What was the model of your first car?">What was the model of your first car?</option>
+                                <option value="In what city was your father or mother born?">In what city was your father or mother born?</option>
+                                <option value="What was the name of your favorite childhood pet?">What was the name of your favorite childhood pet?</option>
+                                <option value="What is your maternal grandmother's maiden name?">What is your maternal grandmother's maiden name?</option>
+                                <option value="What street did you grow up on as a child?">What street did you grow up on as a child?</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Question Text <span class="text-danger">*</span></label>
+                            <input type="text" id="modal_security_question_input" name="security_question" class="form-control" placeholder="e.g. What was your childhood nickname?" value="{{ old('security_question', $user->security_question) }}">
+                            <small class="form-text text-muted">This question is presented on the login verification screen.</small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Security Answer <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" id="modal_security_answer_input" name="security_answer" class="form-control" placeholder="Answer required from user" value="{{ old('security_answer', $user->security_answer) }}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="toggleModalAnswerVisibility()" title="Toggle Answer Visibility">
+                                        <i class="fas fa-eye" id="modalToggleIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Verification is case-insensitive.</small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block mt-4">
+                        <i class="fas fa-save mr-1"></i> Save Security Question
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Currency Modal -->
+<div id="accountCurrencyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title font-weight-bold text-success">
+                    <i class="fas fa-coins mr-2"></i>Account Currency Management
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-info py-2 px-3 mb-3 small">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Setting a currency here configures <strong>{{ $user->name }}'s</strong> account to display all balances, limits, and transactions with this currency code and symbol.
+                </div>
+
+                <form method="POST" action="{{ route('admin.users.currency.set', $user->id) }}">
+                    @csrf
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold">Preset Standard Currencies</label>
+                        <select id="modal_currency_preset" class="form-control" onchange="populateModalPrimaryCurrency(this)">
+                            <option value="">-- Choose from standard currencies --</option>
+                            @if(isset($availableCurrencies))
+                                @foreach($availableCurrencies as $code => $data)
+                                    <option value="{{ $code }}" data-symbol="{{ $data['symbol'] }}" data-name="{{ $data['name'] }}" {{ ($user->s_currency == $code) ? 'selected' : '' }}>
+                                        {{ $code }} - {{ $data['name'] }} ({{ $data['symbol'] }})
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="font-weight-bold">Currency Code <span class="text-danger">*</span></label>
+                            <input type="text" name="currency_code" id="modal_primary_currency_code" class="form-control" placeholder="e.g. USD, EUR, GBP, NGN" value="{{ old('currency_code', $user->s_currency ?? ($settings->s_currency ?? 'USD')) }}" required>
+                            <small class="text-muted">ISO currency code</small>
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="font-weight-bold">Currency Symbol <span class="text-danger">*</span></label>
+                            <input type="text" name="currency_symbol" id="modal_primary_currency_symbol" class="form-control" placeholder="e.g. $, €, £, ₦" value="{{ old('currency_symbol', $user->currency ?? ($settings->currency ?? '$')) }}" required>
+                            <small class="text-muted">Symbol displayed before amount</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="font-weight-bold">Currency Name</label>
+                            <input type="text" name="currency_name" id="modal_primary_currency_name" class="form-control" placeholder="e.g. US Dollar" value="{{ old('currency_name') }}">
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="font-weight-bold">Account Balance</label>
+                            <input type="number" step="0.01" name="account_bal" class="form-control" placeholder="0.00" value="{{ old('account_bal', $user->account_bal) }}">
+                            <small class="text-muted">Current balance in this currency</small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block mt-3">
+                        <i class="fas fa-check-circle mr-1"></i> Save & Apply Currency
+                    </button>
+                </form>
+
+                @if(!empty($user->s_currency) || !empty($user->currency))
+                    <hr>
+                    <form method="POST" action="{{ route('admin.users.currency.reset', $user->id) }}" onsubmit="return confirm('Reset currency for {{ $user->name }} back to system default ({{ $settings->s_currency ?? 'USD' }})?');">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-secondary btn-sm btn-block">
+                            <i class="fas fa-undo mr-1"></i> Reset to System Default ({{ $settings->s_currency ?? 'USD' }})
+                        </button>
+                    </form>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleModalSecFields(enabled) {
+        const fields = document.getElementById('modalSecurityFields');
+        if (fields) {
+            fields.style.opacity = enabled ? '1' : '0.6';
+        }
+    }
+
+    function toggleModalAnswerVisibility() {
+        const input = document.getElementById('modal_security_answer_input');
+        const icon = document.getElementById('modalToggleIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    }
+
+    function populateModalPrimaryCurrency(select) {
+        const selected = select.options[select.selectedIndex];
+        if (selected && selected.value) {
+            document.getElementById('modal_primary_currency_code').value = selected.value;
+            document.getElementById('modal_primary_currency_symbol').value = selected.getAttribute('data-symbol') || '';
+            document.getElementById('modal_primary_currency_name').value = selected.getAttribute('data-name') || '';
+        }
+    }
+</script>

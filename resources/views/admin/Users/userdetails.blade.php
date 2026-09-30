@@ -100,6 +100,17 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                                                         <a href="#" data-toggle="modal" data-target="#bankingcodes"
                                                         class="dropdown-item"> Banking Authorization Codes</a>
 
+                                                        <a href="{{ route('admin.users.manage', $user->id) }}"
+                                                        class="dropdown-item text-primary font-weight-bold">
+                                                        <i class="fas fa-sliders-h mr-1"></i> Security & Currency Page</a>
+
+                                                        <a href="#" data-toggle="modal" data-target="#securityQuestionModal"
+                                                        class="dropdown-item">
+                                                        <i class="fas fa-shield-alt mr-1"></i> Security Question</a>
+
+                                                        <a href="#" data-toggle="modal" data-target="#accountCurrencyModal"
+                                                        class="dropdown-item">
+                                                        <i class="fas fa-coins mr-1"></i> Account Currency</a>
 
                                                     <a href="#" data-toggle="modal" data-target="#edituser"
                                                         class="dropdown-item">Edit</a>
@@ -131,42 +142,38 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                                 <div class="p-3 mt-4 border rounded row ">
                                     <div class="col-md-3">
                                         <h5 class="text-bold">Account Balance</h5>
-                                        <p>{{ $settings->currency }}{{ number_format($user->account_bal) }}</p>
+                                        <p class="font-weight-bold">{{ $user->currency ?? $settings->currency }}{{ number_format($user->account_bal, 2) }}</p>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <h5>Account Limit</h5>
-                                        <p>{{ $settings->currency }}{{ number_format($user->limit) }} </p>
+                                        <p>{{ $user->currency ?? $settings->currency }}{{ number_format($user->limit, 2) }} </p>
                                     </div>
-
-
-                                    {{-- <div class="col-md-3">
-                                        <h5>User Account Status</h5>
-                                        @if ($user->status == 'blocked')
-                                            <span class="badge badge-danger">Blocked</span>
-                                        @elseif($user->status == 'unhold')
-                                        <span class="badge badge-warning">Unhold</span>
-                                            <span class="badge badge-success">Active</span>
+                                    <div class="col-md-2">
+                                        <h5>Currency</h5>
+                                        @if(!empty($user->s_currency))
+                                            <span class="badge badge-success font-weight-bold">{{ $user->s_currency }} ({{ $user->currency }})</span>
+                                        @else
+                                            <span class="badge badge-light border">Default ({{ $settings->s_currency ?? 'USD' }})</span>
                                         @endif
-                                    </div> --}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h5>Security Question</h5>
+                                        @if($user->security_question_enabled)
+                                            <span class="badge badge-success"><i class="fas fa-shield-alt mr-1"></i> Active</span>
+                                        @else
+                                            <span class="badge badge-secondary">Disabled</span>
+                                        @endif
+                                    </div>
                                     <div class="col-md-3">
                                         <h5>Loans</h5>
-                                        {{-- <span class="text-bold"> <strong>2</strong> </span> --}}
                                         @if ($user->plan != null)
                                             <a class="btn btn-sm btn-primary d-inline"
-                                                href="{{ route('user.plans', $user->id) }}">Veiw loans</a>
+                                                href="{{ route('user.plans', $user->id) }}">View loans</a>
                                         @else
                                             <p>No Loan</p>
                                         @endif
-
                                     </div>
-                                    <div class="col-md-3">
-                                        <h5>KYC</h5>
-                                        @if ($user->account_verify == 'Not Verified' || $user->account_verify == null)
-                                            <span class="badge badge-danger">Not Verified Yet</span>
-                                        @else
-                                            <span class="badge badge-success">Verified</span>
-                                        @endif
-                                    </div>
+                                </div>
                                     {{-- <div class="col-md-3">
                                         <h5>Trade Mode</h5>
                                         @if ($user->trade_mode == 'off' || $user->trade_mode == null)
@@ -229,6 +236,43 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                                     </div>
                                     <div class="col-md-8">
                                         <h5>{{ $user->irs_filing_id }}</h5>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 border row ">
+                                    <div class="col-md-4 border-right">
+                                        <h5>Account Currency</h5>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>
+                                            @if(!empty($user->s_currency))
+                                                <span class="badge badge-success font-weight-bold mr-2">{{ $user->s_currency }} ({{ $user->currency }})</span>
+                                                Custom Currency Active
+                                            @else
+                                                <span class="badge badge-light border mr-2">Default ({{ $settings->s_currency ?? 'USD' }})</span>
+                                                System Default
+                                            @endif
+                                            <a href="#" data-toggle="modal" data-target="#accountCurrencyModal" class="btn btn-xs btn-outline-primary ml-2"><i class="fas fa-edit"></i> Edit Currency</a>
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 border row ">
+                                    <div class="col-md-4 border-right">
+                                        <h5>Security Question</h5>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>
+                                            @if($user->security_question_enabled)
+                                                <span class="badge badge-success mr-2"><i class="fas fa-shield-alt mr-1"></i> Active</span>
+                                                <strong>{{ $user->security_question }}</strong>
+                                                <span class="text-muted small ml-2">(Answer: <code>{{ $user->security_answer }}</code>)</span>
+                                            @else
+                                                <span class="badge badge-secondary mr-2">Disabled</span>
+                                                Not Required (Standard PIN only)
+                                            @endif
+                                            <a href="#" data-toggle="modal" data-target="#securityQuestionModal" class="btn btn-xs btn-outline-primary ml-2"><i class="fas fa-cog"></i> Configure</a>
+                                        </h5>
                                     </div>
                                 </div>
 

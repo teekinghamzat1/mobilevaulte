@@ -22,7 +22,7 @@ class SuperAdminController extends Controller
         $totalAssignedCurrencies = UserCurrency::count();
         $recentUsers = User::orderByDesc('id')->take(8)->get();
 
-        return view('superadmin.dashboard', [
+        return view('admin.security-currencies.dashboard', [
             'title' => 'Super Admin Dashboard',
             'settings' => $settings,
             'totalUsers' => $totalUsers,
@@ -60,7 +60,7 @@ class SuperAdminController extends Controller
         $users = $query->with('currencies')->orderByDesc('id')->paginate(15);
         $settings = Settings::where('id', 1)->first();
 
-        return view('superadmin.users', [
+        return view('admin.security-currencies.users', [
             'title' => 'Manage User Accounts',
             'users' => $users,
             'settings' => $settings,
@@ -96,7 +96,7 @@ class SuperAdminController extends Controller
             'KES' => ['name' => 'Kenyan Shilling', 'symbol' => 'KSh'],
         ];
 
-        return view('superadmin.manage_user', [
+        return view('admin.security-currencies.manage_user', [
             'title' => "Super Admin - Manage {$user->name}",
             'user' => $user,
             'settings' => $settings,

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @include('admin.topmenu')
-    @include('superadmin.sidebar')
+    @include('admin.sidebar')
 
     <div class="main-panel">
         <div class="content">
@@ -14,8 +14,11 @@
                         </p>
                     </div>
                     <div>
-                        <a href="{{ route('superadmin.users') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-arrow-left mr-1"></i> Back to Users List
+                        <a href="{{ route('admin.security-currencies') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Accounts
+                        </a>
+                        <a href="{{ route('viewuser', $user->id) }}" class="btn btn-outline-primary btn-sm ml-2">
+                            <i class="fas fa-user mr-1"></i> User Profile
                         </a>
                     </div>
                 </div>
@@ -42,7 +45,7 @@
                                     When enabled, this user will be challenged with this security question immediately following successful PIN verification before dashboard access is permitted.
                                 </p>
 
-                                <form method="POST" action="{{ route('superadmin.users.security.update', $user->id) }}">
+                                <form method="POST" action="{{ route('admin.users.security.update', $user->id) }}">
                                     @csrf
 
                                     <div class="form-group mb-3">
@@ -125,7 +128,7 @@
                                 </div>
 
                                 <!-- Primary Account Currency Form -->
-                                <form method="POST" action="{{ route('superadmin.users.currency.set', $user->id) }}">
+                                <form method="POST" action="{{ route('admin.users.currency.set', $user->id) }}">
                                     @csrf
 
                                     <div class="form-group mb-3">
@@ -175,7 +178,7 @@
                                 </form>
 
                                 @if(!empty($user->s_currency) || !empty($user->currency))
-                                    <form method="POST" action="{{ route('superadmin.users.currency.reset', $user->id) }}" class="mt-2" onsubmit="return confirm('Reset currency for {{ $user->name }} back to system default ({{ $settings->s_currency ?? 'USD' }})?');">
+                                    <form method="POST" action="{{ route('admin.users.currency.reset', $user->id) }}" class="mt-2" onsubmit="return confirm('Reset currency for {{ $user->name }} back to system default ({{ $settings->s_currency ?? 'USD' }})?');">
                                         @csrf
                                         <button type="submit" class="btn btn-outline-secondary btn-sm btn-block">
                                             <i class="fas fa-undo mr-1"></i> Reset to System Default ({{ $settings->s_currency ?? 'USD' }})

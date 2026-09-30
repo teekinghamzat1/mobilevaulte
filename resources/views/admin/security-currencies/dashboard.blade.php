@@ -1,19 +1,19 @@
 @extends('layouts.app')
 @section('content')
     @include('admin.topmenu')
-    @include('superadmin.sidebar')
+    @include('admin.sidebar')
 
     <div class="main-panel">
         <div class="content">
             <div class="page-inner">
                 <div class="mt-2 mb-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <h1 class="title1 d-inline text-primary"><i class="fas fa-crown text-warning mr-2"></i>Super Admin Portal</h1>
-                        <p class="text-muted mb-0">Exclusive management area for Multi-Currency and Security Questions</p>
+                        <h1 class="title1 d-inline text-primary"><i class="fas fa-shield-alt text-primary mr-2"></i>Security & Currency Portal</h1>
+                        <p class="text-muted mb-0">Management area for Multi-Currency and Security Questions</p>
                     </div>
                     <div>
-                        <a href="{{ route('superadmin.users') }}" class="btn btn-primary btn-round">
-                            <i class="fas fa-users-cog mr-1"></i> Manage Users
+                        <a href="{{ route('admin.security-currencies') }}" class="btn btn-primary btn-round">
+                            <i class="fas fa-users-cog mr-1"></i> Manage User Accounts
                         </a>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                         <div class="card shadow-sm h-100">
                             <div class="card-header bg-light d-flex align-items-center justify-content-between">
                                 <h4 class="card-title text-primary mb-0"><i class="fas fa-shield-alt mr-2"></i>Security Questions Policy</h4>
-                                <span class="badge badge-primary">Super Admin Only</span>
+                                <span class="badge badge-primary">Admin Security</span>
                             </div>
                             <div class="card-body">
                                 <p class="text-muted">
@@ -100,7 +100,7 @@
                                     <span class="badge badge-dark">Standard:</span> Username & Password &rarr; PIN &rarr; Account<br>
                                     <span class="badge badge-success mt-2">Enhanced:</span> Username & Password &rarr; PIN &rarr; <strong class="text-primary">Security Question</strong> &rarr; Account
                                 </div>
-                                <a href="{{ route('superadmin.users') }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ route('admin.security-currencies') }}" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-sliders-h mr-1"></i> Configure User Security
                                 </a>
                             </div>
@@ -111,7 +111,7 @@
                         <div class="card shadow-sm h-100">
                             <div class="card-header bg-light d-flex align-items-center justify-content-between">
                                 <h4 class="card-title text-success mb-0"><i class="fas fa-money-bill-wave mr-2"></i>Multi-Currency Management</h4>
-                                <span class="badge badge-success">Super Admin Only</span>
+                                <span class="badge badge-success">Admin Currencies</span>
                             </div>
                             <div class="card-body">
                                 <p class="text-muted">
@@ -122,7 +122,7 @@
                                     <i class="fas fa-check-circle text-success mr-1"></i> Dedicated balance tracking per currency<br>
                                     <i class="fas fa-check-circle text-success mr-1"></i> Displayed directly on customer dashboard
                                 </div>
-                                <a href="{{ route('superadmin.users') }}" class="btn btn-sm btn-outline-success">
+                                <a href="{{ route('admin.security-currencies') }}" class="btn btn-sm btn-outline-success">
                                     <i class="fas fa-coins mr-1"></i> Manage User Currencies
                                 </a>
                             </div>
@@ -136,7 +136,7 @@
                         <div class="card shadow-sm">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h4 class="card-title mb-0">Recent User Accounts</h4>
-                                <a href="{{ route('superadmin.users') }}" class="btn btn-sm btn-link">View All Users &rarr;</a>
+                                <a href="{{ route('admin.security-currencies') }}" class="btn btn-sm btn-link">View All Users &rarr;</a>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -176,7 +176,7 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-right">
-                                                        <a href="{{ route('superadmin.users.manage', $user->id) }}" class="btn btn-sm btn-primary">
+                                                        <a href="{{ route('admin.users.manage', $user->id) }}" class="btn btn-sm btn-primary">
                                                             <i class="fas fa-cog mr-1"></i> Manage
                                                         </a>
                                                     </td>

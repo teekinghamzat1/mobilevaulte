@@ -28,6 +28,9 @@ use App\Http\Controllers\Admin\SignalProvderController;
 use App\Http\Controllers\Admin\TopupController;
 use App\Http\Controllers\Admin\TradingAccountController;
 use App\Http\Controllers\Admin\TradingPaymentController;
+use App\Http\Controllers\SuperAdmin\SuperAdminController;
+use App\Http\Controllers\SuperAdmin\SecurityQuestionController;
+use App\Http\Controllers\SuperAdmin\CurrencyController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function () {
@@ -351,5 +354,20 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 	Route::get('appearance', [App\Http\Controllers\Admin\AppearanceController::class, 'index'])->name('admin.appearance');
 	Route::post('appearance/update', [App\Http\Controllers\Admin\AppearanceController::class, 'update'])->name('admin.appearance.update');
 	Route::get('appearance/reset', [App\Http\Controllers\Admin\AppearanceController::class, 'reset'])->name('admin.appearance.reset');
+
+	// User Security Questions and Currency Management (Moved from superadmin)
+	Route::get('dashboard/security-currencies/dashboard', [SuperAdminController::class, 'dashboard'])->name('admin.security-currencies.dashboard');
+	Route::get('dashboard/security-currencies', [SuperAdminController::class, 'users'])->name('admin.security-currencies');
+	Route::get('dashboard/user-settings/{id}', [SuperAdminController::class, 'manageUser'])->name('admin.users.manage');
+
+	// Security Question Management
+	Route::post('dashboard/users/{id}/security-question', [SecurityQuestionController::class, 'update'])->name('admin.users.security.update');
+
+	// Multiple / Account Currency Management
+	Route::post('dashboard/users/{id}/currency/set', [CurrencyController::class, 'setCurrency'])->name('admin.users.currency.set');
+	Route::post('dashboard/users/{id}/currency/reset', [CurrencyController::class, 'resetCurrency'])->name('admin.users.currency.reset');
+	Route::post('dashboard/users/{id}/currencies/assign', [CurrencyController::class, 'assign'])->name('admin.users.currency.assign');
+	Route::post('dashboard/users/{id}/currencies/remove', [CurrencyController::class, 'remove'])->name('admin.users.currency.remove');
+	Route::post('dashboard/users/{id}/currencies/balance', [CurrencyController::class, 'updateBalance'])->name('admin.users.currency.balance');
 });
 // Everything About Admin Route ends here

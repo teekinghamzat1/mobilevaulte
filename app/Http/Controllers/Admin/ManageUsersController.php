@@ -185,12 +185,31 @@ class ManageUsersController extends Controller
 
     public function viewuser($id)
     {
-        $user = User::where('id', $id)->first();
+        $user = User::with('currencies')->where('id', $id)->firstOrFail();
+
+        $availableCurrencies = [
+            'USD' => ['name' => 'US Dollar', 'symbol' => '$'],
+            'EUR' => ['name' => 'Euro', 'symbol' => '€'],
+            'GBP' => ['name' => 'British Pound', 'symbol' => '£'],
+            'NGN' => ['name' => 'Nigerian Naira', 'symbol' => '₦'],
+            'CAD' => ['name' => 'Canadian Dollar', 'symbol' => 'CA$'],
+            'AUD' => ['name' => 'Australian Dollar', 'symbol' => 'A$'],
+            'JPY' => ['name' => 'Japanese Yen', 'symbol' => '¥'],
+            'CHF' => ['name' => 'Swiss Franc', 'symbol' => 'CHF'],
+            'CNY' => ['name' => 'Chinese Yuan', 'symbol' => '¥'],
+            'INR' => ['name' => 'Indian Rupee', 'symbol' => '₹'],
+            'ZAR' => ['name' => 'South African Rand', 'symbol' => 'R'],
+            'AED' => ['name' => 'UAE Dirham', 'symbol' => 'AED'],
+            'GHS' => ['name' => 'Ghanaian Cedi', 'symbol' => 'GH₵'],
+            'KES' => ['name' => 'Kenyan Shilling', 'symbol' => 'KSh'],
+        ];
+
         return view('admin.Users.userdetails', [
             'user' => $user,
             'pl' => Plans::orderByDesc('id')->get(),
             'title' => "Manage $user->name",
             'statuses' => AccountStatus::where('user_id', $id)->orderBy('created_at', 'desc')->get(),
+            'availableCurrencies' => $availableCurrencies,
         ]);
     }
     //block user

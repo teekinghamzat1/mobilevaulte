@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @include('admin.topmenu')
-    @include('superadmin.sidebar')
+    @include('admin.sidebar')
 
     <div class="main-panel">
         <div class="content">
@@ -12,7 +12,7 @@
                         <p class="text-muted mb-0">Select an account to configure optional security questions and assigned currencies</p>
                     </div>
                     <div>
-                        <a href="{{ route('superadmin.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('admin.security-currencies.dashboard') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-arrow-left mr-1"></i> Overview
                         </a>
                     </div>
@@ -24,7 +24,7 @@
                 <!-- Filter & Search Bar -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
-                        <form method="GET" action="{{ route('superadmin.users') }}" class="row align-items-end">
+                        <form method="GET" action="{{ route('admin.security-currencies') }}" class="row align-items-end">
                             <div class="col-md-5 mb-2 mb-md-0">
                                 <label class="small font-weight-bold text-muted">Search User</label>
                                 <div class="input-group">
@@ -108,8 +108,11 @@
                                                 @endif
                                             </td>
                                             <td class="text-right">
-                                                <a href="{{ route('superadmin.users.manage', $user->id) }}" class="btn btn-sm btn-primary">
+                                                <a href="{{ route('admin.users.manage', $user->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-sliders-h mr-1"></i> Configure
+                                                </a>
+                                                <a href="{{ route('viewuser', $user->id) }}" class="btn btn-sm btn-outline-secondary ml-1" title="User Profile">
+                                                    <i class="fas fa-user"></i>
                                                 </a>
                                             </td>
                                         </tr>

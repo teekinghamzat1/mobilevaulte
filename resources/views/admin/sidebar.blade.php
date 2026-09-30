@@ -26,20 +26,41 @@
                 </li>
 
 
- <li
-                        class="nav-item {{ request()->routeIs('manageusers') ? 'active' : '' }} {{ request()->routeIs('loginactivity') ? 'active' : '' }} {{ request()->routeIs('user.plans') ? 'active' : '' }} {{ request()->routeIs('viewuser') ? 'active' : '' }}">
+                    <li
+                        class="nav-item {{ request()->routeIs('manageusers') ? 'active' : '' }} {{ request()->routeIs('loginactivity') ? 'active' : '' }} {{ request()->routeIs('user.plans') ? 'active' : '' }} {{ request()->routeIs('viewuser') ? 'active' : '' }} {{ request()->routeIs('admin.users.manage') ? 'active' : '' }}">
                         <a href="{{ url('/admin/dashboard/manageusers') }}">
                             <i class="fa fa-user-circle" aria-hidden="true"></i>
                             <p>Manage Users</p>
                         </a>
                     </li>
 
-
                     <li class="nav-item {{ request()->routeIs('admin.createnewuser') ? 'active' : '' }}">
                         <a href="{{ route('createnewuser') }}">
                             <i class="fas fa-user"></i>
                             <p>Create New user</p>
                         </a>
+                    </li>
+
+                    <li class="nav-item {{ request()->routeIs('admin.security-currencies*') || request()->routeIs('admin.users.manage*') ? 'active' : '' }}">
+                        <a data-toggle="collapse" href="#secCurrencies">
+                            <i class="fas fa-coins" aria-hidden="true"></i>
+                            <p>Security & Currency</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ request()->routeIs('admin.security-currencies*') || request()->routeIs('admin.users.manage*') ? 'show' : '' }}" id="secCurrencies">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a href="{{ route('admin.security-currencies.dashboard') }}">
+                                        <span class="sub-item">Overview</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.security-currencies') }}">
+                                        <span class="sub-item">Manage Accounts</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
 
                 <li
@@ -325,6 +346,11 @@
                                 <li>
                                     <a href="{{ route('appsettingshow') }}">
                                         <span class="sub-item">App Settings</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.security-currencies') }}">
+                                        <span class="sub-item">Security & Currencies</span>
                                     </a>
                                 </li>
                                 {{-- <li>
